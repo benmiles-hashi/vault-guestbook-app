@@ -18,7 +18,7 @@ jobs:
 
       - name: Login to Vault via OIDC
         id: vault_login
-        uses: hashicorp/vault-action@v2.4.0
+        uses: hashicorp/vault-action@v2
         with:
           url: https://ben-vault-1-public-vault-9257d029.b416a999.z1.hashicorp.cloud:8200
           namespace: admin               # your HCP namespace
