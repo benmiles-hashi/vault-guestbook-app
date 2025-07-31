@@ -36,11 +36,9 @@ jobs:
         with:
           url:       ${{ secrets.VAULT_ADDR }}
           namespace: admin
-          # reuse the token from your jwt login:
           method:    token
           token:     ${{ steps.vault_login.outputs.client_token }}
           secrets: |
-            # KV-v2 data path is “kv/data/<name>”, not metadata
             - path: kv/data/tfe_config
               env:
                 TFE_ENCRYPTION: data.data.tfe_encryption
@@ -50,10 +48,9 @@ jobs:
         env:
           TFE_ENCRYPTION: ${{ steps.fetch_tfe.outputs.TFE_ENCRYPTION }}
 
-      # (optional) read a specific secret to prove it works:
-      #- name: Read demo secret
-      #  env:
-      #    VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-      #    VAULT_NAMESPACE: admin
-      #    VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
-      #  run: vault kv get secret/data/demo
+      - name: Read demo secret
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+          VAULT_NAMESPACE: admin
+          VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
+        run: vault kv get -namespace=admin -mount="kv" "tfe_config"
