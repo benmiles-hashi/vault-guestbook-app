@@ -18,13 +18,14 @@ jobs:
 
       - name: Login to Vault via OIDC
         id: vault_login
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v2.4.0
         with:
-          url: ${{ secrets.VAULT_ADDR }}
+          url: https://ben-vault-1-public-vault-9257d029.b416a999.z1.hashicorp.cloud:8200
           namespace: admin               # your HCP namespace
           method: jwt
           path: jwt-github-actions       # the mount path you created
           role: ci-pipeline              # the Vault role_name
+          outputToken: true
 
       - name: Show Vault token
         run: |
@@ -32,14 +33,14 @@ jobs:
 
       - name: Fetch TFE encryption key from Vault
         id: fetch_tfe
-        uses: hashicorp/vault-action@v2
+        uses: hashicorp/vault-action@v2.4.0
         with:
-          url:       ${{ secrets.VAULT_ADDR }}
+          url:       https://ben-vault-1-public-vault-9257d029.b416a999.z1.hashicorp.cloud:8200
           namespace: admin
           method:    token
           token:     ${{ steps.vault_login.outputs.client_token }}
           secrets: |
-            kv/data/tfe_config    tfe_encryption | TFE_ENCRYPTION
+            kv/data/tfe_config tfe_encryption | TFE_ENCRYPTION
 
       - name: Show TFE encryption key
         run: echo "TFE_ENCRYPTION=${TFE_ENCRYPTION}"
