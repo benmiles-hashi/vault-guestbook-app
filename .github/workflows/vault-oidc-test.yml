@@ -27,7 +27,8 @@ jobs:
           role: ci-pipeline              # the Vault role_name
 
       - name: Show Vault token
-        run: echo "Got token: ${{ steps.vault_login.outputs.client_token }}"
+        run: |
+          echo "Got token: ${{ steps.vault_login.outputs.client_token }}"
 
       - name: List KV engines in Vault
         env:
