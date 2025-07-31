@@ -42,6 +42,7 @@ jobs:
           url:       https://ben-vault-1-public-vault-9257d029.b416a999.z1.hashicorp.cloud:8200
           namespace: admin
           method:    token
+          token: $VAULT_TOKEN
           secrets: |
             kv/data/tfe_config tfe_encryption | TFE_ENCRYPTION
 
