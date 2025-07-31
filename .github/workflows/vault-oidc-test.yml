@@ -50,10 +50,3 @@ jobs:
         run: echo "TFE_ENCRYPTION=${TFE_ENCRYPTION}"
         env:
           TFE_ENCRYPTION: ${{ steps.fetch_tfe.outputs.TFE_ENCRYPTION }}
-
-      - name: Read demo secret
-        env:
-          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-          VAULT_NAMESPACE: admin
-          VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
-        run: vault kv get -namespace=admin -mount="kv" "tfe_config"
