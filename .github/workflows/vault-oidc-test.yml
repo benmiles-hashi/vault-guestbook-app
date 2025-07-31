@@ -39,9 +39,7 @@ jobs:
           method:    token
           token:     ${{ steps.vault_login.outputs.client_token }}
           secrets: |
-            - path: kv/data/tfe_config
-              env:
-                TFE_ENCRYPTION: data.data.tfe_encryption
+            kv/data/tfe_config    tfe_encryption | TFE_ENCRYPTION
 
       - name: Show TFE encryption key
         run: echo "TFE_ENCRYPTION=${TFE_ENCRYPTION}"
