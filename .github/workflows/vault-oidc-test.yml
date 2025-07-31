@@ -30,13 +30,25 @@ jobs:
         run: |
           echo "Got token: ${{ steps.vault_login.outputs.client_token }}"
 
-      - name: List KV engines in Vault
+      - name: Fetch TFE encryption key from Vault
+        id: fetch_tfe
+        uses: hashicorp/vault-action@v2
+        with:
+          url:       ${{ secrets.VAULT_ADDR }}
+          namespace: admin
+          # reuse the token from your jwt login:
+          method:    token
+          token:     ${{ steps.vault_login.outputs.client_token }}
+          secrets: |
+            # KV-v2 data path is “kv/data/<name>”, not metadata
+            - path: kv/data/tfe_config
+              env:
+                TFE_ENCRYPTION: data.data.tfe_encryption
+
+      - name: Show TFE encryption key
+        run: echo "TFE_ENCRYPTION=${TFE_ENCRYPTION}"
         env:
-          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-          VAULT_NAMESPACE: admin
-          VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
-        run: |
-          vault secrets list
+          TFE_ENCRYPTION: ${{ steps.fetch_tfe.outputs.TFE_ENCRYPTION }}
 
       # (optional) read a specific secret to prove it works:
       #- name: Read demo secret
