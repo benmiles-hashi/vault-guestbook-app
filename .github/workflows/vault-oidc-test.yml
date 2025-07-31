@@ -1,0 +1,46 @@
+name: 🛠  Test Vault OIDC Login
+
+# we’ll trigger it manually
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read    # needed for checkout
+  id-token: write   # needed to mint GitHub OIDC token
+
+jobs:
+  vault-login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Login to Vault via OIDC
+        id: vault_login
+        uses: hashicorp/vault-action@v2
+        with:
+          url: ${{ secrets.VAULT_ADDR }}
+          namespace: admin               # your HCP namespace
+          method: jwt
+          path: jwt-github-actions       # the mount path you created
+          role: ci-pipeline              # the Vault role_name
+
+      - name: Show Vault token
+        run: echo "Got token: ${{ steps.vault_login.outputs.client_token }}"
+
+      - name: List KV engines in Vault
+        env:
+          VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+          VAULT_NAMESPACE: admin
+          VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
+        run: |
+          vault secrets list
+
+      # (optional) read a specific secret to prove it works:
+      #- name: Read demo secret
+      #  env:
+      #    VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
+      #    VAULT_NAMESPACE: admin
+      #    VAULT_TOKEN: ${{ steps.vault_login.outputs.client_token }}
+      #  run: vault kv get secret/data/demo

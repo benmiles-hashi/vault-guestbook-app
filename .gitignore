@@ -1,0 +1,59 @@
+# --- Terraform ---
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Crash logs
+crash.log
+*.tfplan
+*.tfvars
+*.tfvars.json
+
+# --- Sensitive credentials / keys ---
+*.pem
+*.key
+*.crt
+*.pfx
+*.jks
+*.keystore
+
+# --- Vault (if using HashiCorp Vault) ---
+vault-agent.log
+vault-agent*
+vault.log
+*.hcl
+
+# --- AWS credentials / CLI cache (if present locally) ---
+.aws/
+*.aws
+
+# --- General ---
+*.log
+*.bak
+*.swp
+*.tmp
+*.old
+*.orig
+.DS_Store
+Thumbs.db
+
+# --- Node/npm (if using for frontend/dev tooling) ---
+node_modules/
+
+# --- Python (if used for scripts) ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+.env.*
+
+# --- Docker (if dockerizing app) ---
+*.tar
+*.img
+*.container
+docker-compose.override.yml
+
+# --- System ---
+.vscode/
+.idea/
