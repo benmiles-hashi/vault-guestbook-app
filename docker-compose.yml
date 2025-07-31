@@ -1,0 +1,54 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: demo
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-prootpassword"]
+      interval: 5s
+      retries: 5
+    networks:
+      - demo-net
+
+  vault:
+    image: hashicorp/vault:1.20.1
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: root
+      VAULT_ADDR: "http://127.0.0.1:8200"
+    command: server -dev -dev-root-token-id=root -dev-listen-address=0.0.0.0:8200
+    ports:
+      - "8200:8200"
+    networks:
+      - demo-net
+
+  app:
+    build: ./app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      vault:
+        condition: service_started
+    environment:
+      VAULT_ADDR: http://vault:8200
+      VAULT_TOKEN: root
+      VAULT_DB_ROLE: demo-role
+      VAULT_DB_PATH: database/config/demo
+      DB_NAME: demo
+      CERT_CN: "localhost"
+      CERT_TTL: "24h"
+    volumes:
+      - ./app/certs:/app/certs
+    ports:
+      - "8443:5000"
+    networks:
+      - demo-net
+
+networks:
+  demo-net:

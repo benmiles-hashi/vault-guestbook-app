@@ -1,0 +1,2 @@
+openssl s_client -connect localhost:8443 -showcerts </dev/null   | openssl x509 -noout -dates -subject
+curl -k https://localhost:8443

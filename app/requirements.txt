@@ -1,0 +1,4 @@
+Flask
+hvac
+mysql-connector-python
+cryptography
