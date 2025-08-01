@@ -64,7 +64,7 @@ jobs:
             --data '{
               "data": {
                 "attributes": {
-                  "name": ${{ env.TF_WORKSPACE }},
+                  "name": "${{ env.TF_WORKSPACE }}",
                   "auto-apply": false
                 },
                 "type": "workspaces"
