@@ -10,8 +10,7 @@ permissions:
 
 env:
   # No need to pass as inputs to each action
-  TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
-  TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+  #TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
   TF_WORKSPACE: "my-workspace"
   TF_DIRECTORY: "./terraform/vault"
 
@@ -105,7 +104,7 @@ jobs:
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
         id: plan-run
         with:
-          workspace: ${{ secrets.TFC_WORKSPACE }}
+          workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
           plan_only: true
 
