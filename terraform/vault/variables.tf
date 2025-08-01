@@ -14,3 +14,11 @@ variable "vault_namespace" {
   description = "Vault namespace"
     default= "admin"
 }
+variable "initial_tfc_token" {
+    type        = string
+  description = "TFC Initial Token"
+}
+variable "tfc_user_id" {
+  type        = string
+  description = "tfc user"
+}

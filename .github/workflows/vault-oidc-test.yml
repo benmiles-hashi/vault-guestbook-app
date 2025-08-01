@@ -35,6 +35,40 @@ jobs:
         run: |
           echo "VAULT_TOKEN is set to: $VAULT_TOKEN"
 
+      - name: Fetch TFC API token from Vault
+        id: fetch_tfc
+        uses: hashicorp/vault-action@v2
+        with:
+          url:       ${{ secrets.VAULT_ADDR }}
+          namespace: admin
+          method:    token
+          token:     ${{ env.VAULT_TOKEN }}
+          secrets: |
+            terraform-github/creds/ci token | TFC_TOKEN
+
+      - name: Debug TFC token length
+        run: echo "TFC_TOKEN has length ${#TFC_TOKEN}"
+
+      - name: Create test workspace in Terraform Cloud
+        run: |
+          curl --fail \
+            --header "Authorization: Bearer ${{ steps.fetch_tfc.outputs.TFC_TOKEN }}" \
+            --header "Content-Type: application/vnd.api+json" \
+            --request POST \
+            --data '{
+              "data": {
+                "attributes": {
+                  "name": "test-workspace",
+                  "auto-apply": false
+                },
+                "type": "workspaces"
+              }
+            }' \
+            https://app.terraform.io/api/v2/organizations/${{ secrets.TFC_ORG }}/workspaces \
+          && echo "✅ test-workspace created"
+        env:
+          TFC_TOKEN: ${{ steps.fetch_tfc.outputs.TFC_TOKEN }}
+          
       - name: Fetch TFE encryption key from Vault
         id: fetch_tfe
         uses: hashicorp/vault-action@v2
