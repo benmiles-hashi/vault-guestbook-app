@@ -50,15 +50,15 @@ jobs:
           method:    token
           token:     ${{ env.VAULT_TOKEN }}
           secrets: |
-            terraform-github/creds/ci token | TFC_TOKEN
+            terraform-github/creds/ci token | TF_API_TOKEN
 
       - name: Debug TFC token length
-        run: echo "TFC_TOKEN has length ${#TFC_TOKEN}"
+        run: echo "TF_API_TOKEN has length ${#TF_API_TOKEN}"
 
       - name: Create test workspace in Terraform Cloud
         run: |
           curl --fail \
-            --header "Authorization: Bearer ${{ steps.fetch_tfc.outputs.TFC_TOKEN }}" \
+            --header "Authorization: Bearer ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}" \
             --header "Content-Type: application/vnd.api+json" \
             --request POST \
             --data '{
@@ -73,7 +73,7 @@ jobs:
             https://app.terraform.io/api/v2/organizations/${{ env.TF_CLOUD_ORGANIZATION }}/workspaces \
           && echo "✅ ${{ env.TF_WORKSPACE }}"
         env:
-          TFC_TOKEN: ${{ steps.fetch_tfc.outputs.TFC_TOKEN }}
+          TFC_TOKEN: ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}
 
       - name: Fetch TFE encryption key from Vault
         id: fetch_tfe
