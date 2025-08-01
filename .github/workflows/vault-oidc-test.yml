@@ -99,6 +99,7 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           directory: ./terraform/vault
           speculative: true
+          token: ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}
 
       - name: Create Plan Run
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
@@ -107,12 +108,14 @@ jobs:
           workspace: ${{ env.TF_WORKSPACE }}
           configuration_version: ${{ steps.plan-upload.outputs.configuration_version_id }}
           plan_only: true
+          token: ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}
 
       - name: Plan Output
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
         id: plan-output
         with:
           plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}
+          token: ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}
 
     #  - name: Apply Run
     #    uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.2
