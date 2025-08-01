@@ -29,6 +29,6 @@ docker-compose exec vault vault write database/roles/demo-role \
     db_name=demo \
     creation_statements="
       CREATE USER '{{name}}'@'%' IDENTIFIED BY '{{password}}';
-      GRANT SELECT ON demo.* TO '{{name}}'@'%';
+      GRANT SELECT, INSERT ON demo.* TO '{{name}}'@'%';
     " \
     default_ttl="1m" max_ttl="5m"
