@@ -110,10 +110,10 @@ jobs:
           plan_only: true
           token: ${{ steps.fetch_tfc.outputs.TF_API_TOKEN }}
         env:
-          TF_VAR_vault_addr:         ${{ secrets.VAULT_ADDR }}
-          TF_VAR_vault_token:        ${{ env.VAULT_TOKEN }}
-          TF_VAR_initial_tfc_token:  ${{ secrets.INITIAL_TFC_TOKEN }}
-          TF_VAR_tfc_user_id:        ${{ secrets.TFC_USER_ID }}
+          TF_VAR_vault_addr="\"${{ secrets.VAULT_ADDR }}\""
+          TF_VAR_vault_token="\"${{ secrets.VAULT_TOKEN }}\""
+          TF_VAR_initial_tfc_token="\"${{ secrets.INITIAL_TFC_TOKEN }}\""
+          TF_VAR_tfc_user_id="\"${{ secrets.TFC_USER_ID }}\""
 
       - name: Plan Output
         uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
