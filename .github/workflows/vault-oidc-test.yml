@@ -10,7 +10,7 @@ permissions:
 
 env:
   # No need to pass as inputs to each action
-  #TF_CLOUD_ORGANIZATION: ${{ secrets.TF_CLOUD_ORGANIZATION }}
+  TF_CLOUD_ORGANIZATION: "ben-miles-org"
   TF_WORKSPACE: "my-workspace"
   TF_DIRECTORY: "./terraform/vault"
 
@@ -70,7 +70,7 @@ jobs:
                 "type": "workspaces"
               }
             }' \
-            https://app.terraform.io/api/v2/organizations/${{ secrets.TFC_ORG }}/workspaces \
+            https://app.terraform.io/api/v2/organizations/${{ env.TF_CLOUD_ORGANIZATION }}/workspaces \
           && echo "✅ ${{ env.TF_WORKSPACE }}"
         env:
           TFC_TOKEN: ${{ steps.fetch_tfc.outputs.TFC_TOKEN }}
